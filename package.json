@@ -1,0 +1,22 @@
+{
+  "name": "jayos-site",
+  "version": "1.0.0",
+  "description": "A retro terminal-themed personal portfolio homepage for Jamie Joyce.",
+  "private": true,
+  "license": "MIT",
+  "author": "Jamie Joyce",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "sanitize-html": "^2.13.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
