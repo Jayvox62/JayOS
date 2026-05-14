@@ -1,54 +1,58 @@
 # JayOS Portfolio Site
 
-A retro terminal-themed personal portfolio homepage for Jamie Joyce.
+A retro terminal-themed personal portfolio homepage for Jamie Joyce, with an admin customize panel, Signal/contact area, projects, links, certifications, live theme editing, and an editable "currently" section.
 
-## Current customisation
+## Included updates
 
-- Rebranded from `jamieOS` to **JayOS**.
-- Removed old template/source-person references.
-- Updated links:
-  - GitHub: https://github.com/Jayvox62
-  - LinkedIn: https://www.linkedin.com/in/jamie-joyce96/
-- Projects now focus on:
-  - **Lúgic** — safe, high-level browser tooling for formatting, parsing, diagnostics, and local-first workflow usability.
-  - **CineClash** — a movie-chain game project.
-- Education/certifications:
-  - BSc in Computing
-  - ITIL Foundation — pending certification, curriculum completed
-- Public “Guestbook” wording has been renamed to **Open Channel**.
+- Rebranded the app to **JayOS**.
+- Updated links to Jamie's GitHub and LinkedIn.
+- Removed pronouns from the public profile and customize form.
+- Removed unrelated TSOYP/template wording from the public-facing defaults.
+- Cleaned projects down to **Lúgic** and **CineClash**.
+- Updated education/certifications to **BSc in Computing** and **ITIL Foundation — pending certification**.
+- Added an editable **currently** block for small human details like building, watching, playing, or thinking about.
 
 ## Run locally
 
 ```bash
 npm install
-ADMIN_PASSWORD=your-password SESSION_SECRET=some-long-random-string npm start
+cp .env.example .env
+# edit .env and set ADMIN_PASSWORD
+npm start
 ```
 
-Then open:
+Visit `http://localhost:3000`. Click **login** and use the password from `.env`.
 
-```text
-http://localhost:3000
-```
+## Render setup
 
-## Render settings
+Use these commands:
 
-If this project is inside a folder in your GitHub repo, set Render’s **Root Directory** to that folder.
-
-```text
+```bash
 Build Command: npm install
 Start Command: npm start
 ```
 
-Environment variables required on Render:
+Add these environment variables in Render:
 
 ```text
-ADMIN_PASSWORD=choose-a-password
-SESSION_SECRET=choose-a-long-random-string
+ADMIN_PASSWORD=your-admin-password
+SESSION_SECRET=any-long-random-string
+COOKIE_SECURE=true
 NODE_ENV=production
 ```
 
-## Admin access
+## Config
 
-You are not admin automatically. Click **login** on the site and enter the value you set as `ADMIN_PASSWORD` in Render. Once logged in, the customize panel becomes available.
+| Variable | Required | Notes |
+|---|---:|---|
+| `ADMIN_PASSWORD` | yes | Password for the single admin user. |
+| `PORT` | no | Defaults to `3000`. |
+| `COOKIE_SECURE` | no | Set to `true` behind HTTPS, including Render. |
+| `SESSION_SECRET` | no | Auto-generated into `data/session.secret` if omitted. |
+| `DATA_DIR` | no | Defaults to `./data`. |
 
-Do not commit `.env` or `node_modules/`.
+## Notes
+
+All editable site state is stored in `./data/`. Back that folder up if you deploy it with persistent storage.
+
+Original project is MIT licensed. Keep `LICENSE` when publishing your fork.

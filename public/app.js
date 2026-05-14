@@ -180,7 +180,7 @@ const state = {
   panelOpen: false,
   loginOpen: false,
   panelTab: "theme",
-  guestbook: [], // stored via the existing guestbook API; shown publicly as Open Channel
+  guestbook: [],
   clock: new Date(),
   serverVersion: null,
 };
@@ -457,7 +457,6 @@ function renderSidebar() {
         class: "display display-name" + (state.settings.effects.glow ? " glow" : ""),
         text: s.displayName,
       }),
-      s.pronouns ? el("div", { class: "pronouns", text: s.pronouns }) : null,
     ),
   );
 }
@@ -469,7 +468,7 @@ function renderMain() {
   if (state.activeView === "certifications") main.appendChild(renderCertifications());
   if (state.activeView === "links") main.appendChild(renderLinks());
   main.appendChild(renderTerminal());
-  main.appendChild(renderOpenChannel());
+  main.appendChild(renderGuestbook());
   return main;
 }
 
@@ -482,10 +481,32 @@ function renderHome() {
       el("span", { class: "hint", text: "→ " + s.username }),
     ),
     el("p", { class: "bio", text: s.bio }),
+    renderCurrently(),
     el("div", { class: "pills" },
       el("span", { class: "pill", text: "status: online" }),
       el("span", { class: "pill", text: "shell: bash" }),
       el("span", { class: "pill", text: `kernel: ${s.osName.toLowerCase()}-linux` }),
+    ),
+  );
+}
+
+
+function renderCurrently() {
+  const items = Array.isArray(state.settings.currently) ? state.settings.currently : [];
+  if (!items.length) return null;
+
+  return el("div", { class: "currently" },
+    el("div", { class: "currently-head" },
+      el("span", { class: "display", text: "// currently" }),
+      el("span", { class: "muted", text: "editable from customize" }),
+    ),
+    el("div", { class: "currently-grid" },
+      items
+        .filter((item) => (item.label || item.value || "").trim())
+        .map((item) => el("div", { class: "current-item" },
+          el("span", { class: "current-label", text: (item.label || "item").toUpperCase() }),
+          el("span", { class: "current-value", text: item.value || "—" }),
+        )),
     ),
   );
 }
@@ -820,8 +841,8 @@ function renderTerminal() {
   return wrap;
 }
 
-/* ---------------- open channel ---------------- */
-function renderOpenChannel() {
+/* ---------------- guestbook ---------------- */
+function renderGuestbook() {
   const list = el("div", { class: "guest-list" });
   for (const m of state.guestbook) {
     const entry = el("div", { class: "guest-msg" },
@@ -847,14 +868,14 @@ function renderOpenChannel() {
   }
   if (!state.guestbook.length) {
     list.appendChild(el("div", { class: "muted", style: { padding: "12px", fontSize: "13px" } },
-      "no transmissions yet. open the channel."));
+      "no messages yet. break the silence."));
   }
 
   const nameInput = el("input", {
     class: "text-input", placeholder: "handle", maxlength: "40",
   });
   const msgInput = el("textarea", {
-    class: "text-input", placeholder: "send a transmission…",
+    class: "text-input", placeholder: "leave a message for the void…",
     rows: "2", maxlength: "400",
   });
 
@@ -892,7 +913,7 @@ function renderOpenChannel() {
   nameInput.addEventListener("focus", ensureToken, { once: true });
   msgInput.addEventListener("focus", ensureToken, { once: true });
 
-  const postBtn = el("button", { class: "btn-primary" }, "▶ send transmission");
+  const postBtn = el("button", { class: "btn-primary" }, "▶ post to the void");
   postBtn.addEventListener("click", async () => {
     const name = nameInput.value.trim();
     const msg = msgInput.value.trim();
@@ -912,7 +933,7 @@ function renderOpenChannel() {
       // Token is now burned — invalidate so a fresh one is fetched next time.
       tokenPromise = null;
       render();
-      toast("transmission sent");
+      toast("posted");
     } catch (e) {
       const msg = String(e.message || "failed");
       toast(msg, true);
@@ -928,8 +949,8 @@ function renderOpenChannel() {
 
   return el("div", { class: "win card" },
     el("div", { class: "row-between mb-12" },
-      el("span", { class: "display", style: { fontSize: "22px", color: "var(--accent)" }, text: "# open channel" }),
-      el("span", { class: "muted", style: { fontSize: "11px" }, text: state.guestbook.length + " transmissions" }),
+      el("span", { class: "display", style: { fontSize: "22px", color: "var(--accent)" }, text: "# signal" }),
+      el("span", { class: "muted", style: { fontSize: "11px" }, text: state.guestbook.length + " messages" }),
     ),
     list,
     el("div", { style: { display: "grid", gap: "8px", position: "relative" } },
@@ -1124,7 +1145,6 @@ function renderTabIdentity() {
   const fields = [
     ["osName", "os name"],
     ["displayName", "display name"],
-    ["pronouns", "pronouns"],
     ["username", "username (shell)"],
     ["hostname", "hostname"],
     ["path", "path"],
@@ -1166,6 +1186,57 @@ function renderTabIdentity() {
 
 function renderTabContent() {
   const wrap = el("div", { style: { display: "grid", gap: "20px" } });
+
+  /* ---- currently ---- */
+  if (!Array.isArray(state.settings.currently)) {
+    state.settings.currently = [];
+  }
+  const currentSection = el("div");
+  currentSection.appendChild(el("div", { class: "row-between mb-12" },
+    el("span", { class: "field", style: { marginBottom: 0 }, text: "currently" }),
+    el("button", {
+      class: "btn-ghost",
+      onClick: () => {
+        state.settings.currently.push({ label: "currently", value: "" });
+        scheduleSave();
+        render();
+      },
+    }, "+ add"),
+  ));
+  currentSection.appendChild(el("p", {
+    class: "muted",
+    style: { fontSize: "11px", margin: "0 0 10px" },
+    text: "Small human details shown on the home screen — examples: watching, playing, building, thinking about.",
+  }));
+
+  for (let i = 0; i < state.settings.currently.length; i++) {
+    const item = state.settings.currently[i];
+    const row = el("div", {
+      style: {
+        display: "grid", gridTemplateColumns: "0.8fr 1.2fr auto", gap: "6px",
+        marginBottom: "6px", alignItems: "center",
+      },
+    });
+    const label = el("input", { class: "text-input", placeholder: "label e.g. building", value: item.label || "" });
+    const value = el("input", { class: "text-input", placeholder: "value e.g. CineClash", value: item.value || "" });
+    label.addEventListener("input", (e) => { state.settings.currently[i].label = e.target.value; scheduleSave(); });
+    value.addEventListener("input", (e) => { state.settings.currently[i].value = e.target.value; scheduleSave(); });
+    label.addEventListener("blur", () => renderLiveSurfaces());
+    value.addEventListener("blur", () => renderLiveSurfaces());
+    const del = el("button", {
+      class: "btn-ghost",
+      onClick: () => {
+        state.settings.currently.splice(i, 1);
+        scheduleSave();
+        render();
+      },
+    }, "✕");
+    row.appendChild(label);
+    row.appendChild(value);
+    row.appendChild(del);
+    currentSection.appendChild(row);
+  }
+  wrap.appendChild(currentSection);
 
   /* ---- projects ---- */
   const projSection = el("div");

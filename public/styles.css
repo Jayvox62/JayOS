@@ -733,3 +733,49 @@ textarea.text-input { resize: vertical; min-height: 56px; }
 .mt-8 { margin-top: 8px; }
 .mt-16 { margin-top: 16px; }
 .mb-12 { margin-bottom: 12px; }
+
+/* ---------------- currently block ---------------- */
+.currently {
+  margin: 0 0 18px;
+  padding: 12px;
+  border: 1px dashed var(--border);
+  background: color-mix(in srgb, var(--surface-alt) 72%, transparent);
+}
+.currently-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-size: 13px;
+}
+.currently-head .muted {
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.currently-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+.current-item {
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+  background: color-mix(in srgb, var(--bg) 28%, transparent);
+}
+.current-label {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  margin-bottom: 4px;
+}
+.current-value {
+  display: block;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.35;
+}

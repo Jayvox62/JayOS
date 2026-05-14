@@ -151,31 +151,30 @@ const DEFAULT_SETTINGS = {
   identity: {
     displayName: "Jamie Joyce",
     username: "jay",
-    hostname: "portfolio",
+    hostname: "jayos",
     osName: "JayOS",
     path: "/home/jay",
     bio: "Computer Science graduate with experience across support engineering, systems troubleshooting, workflow tooling, and frontend development.\n\nInterested in building software that simplifies messy processes, improves usability, and turns complex information into something clearer and more useful.",
+    // Empty avatar by default — render falls back to hiding the broken-image
+    // icon (handled by the `onerror` attribute on the avatar img). The new
+    // admin sets their own URL via the customize drawer.
     avatar: "",
     prompt: "$",
   },
+  currently: [
+    { label: "building", value: "Lúgic" },
+    { label: "working on", value: "CineClash systems" },
+    { label: "thinking about", value: "cleaner interfaces and messy data" },
+    { label: "based in", value: "Dublin" },
+  ],
   projects: [
-    {
-      name: "Lúgic",
-      desc: "Browser-based tooling focused on formatting, parsing, diagnostics, and workflow usability. Designed around local-first processing and simplifying messy operational data.",
-      url: "#",
-      tag: "tool"
-    },
-    {
-      name: "CineClash",
-      desc: "A movie-chain game built around quick links between actors, films, directors, and cinematic clues. Focused on fast interaction, replayability, and film knowledge discovery.",
-      url: "#",
-      tag: "game"
-    }
+    { name: "Lúgic", desc: "Browser-based tooling focused on formatting, parsing, diagnostics, and workflow usability. Designed around local-first processing and simplifying messy operational data.", url: "#", tag: "tool" },
+    { name: "CineClash", desc: "A film-linking game inspired by actor, director, and cinematic relationship chains. Focused on fast interaction, replayability, and movie knowledge discovery.", url: "#", tag: "game" },
   ],
   links: [
     { label: "github", url: "https://github.com/Jayvox62" },
     { label: "linkedin", url: "https://www.linkedin.com/in/jamie-joyce96/" },
-    { label: "email", url: "mailto:jamiejoyce62@gmail.com" }
+    { label: "email", url: "mailto:jamiejoyce62@gmail.com" },
   ],
   certifications: [
     {
@@ -197,6 +196,9 @@ const DEFAULT_SETTINGS = {
       inProgress: true,
     },
   ],
+  // Explicit section ordering — overrides the implicit "first appearance" order.
+  // Sections present in certifications but absent here are appended at the end
+  // in the order they first appear, so adding a new section is non-breaking.
   certSectionOrder: ["Education", "Certifications"],
   themeKey: "matrix",
   colors: {
@@ -378,7 +380,7 @@ app.get("/api/health", (req, res) => {
 //
 // Pentest finding (Apr 2026) flagged the fields `path`, `hostname`, `osName`
 // here as "leaking internal system info". Intentional non-fix: these are
-// user-chosen display strings shown in the page UI (e.g. "JayOS ~ /home/jay"
+// user-chosen display strings shown in the page UI (e.g. "jamieOS ~ /home/guest"
 // in the top bar). They're not real paths, real hostnames, or the real OS —
 // they're cosmetic fields the admin types into the identity tab. The
 // recommendation is noted and deliberately declined; anyone forking this app
