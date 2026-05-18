@@ -8,8 +8,9 @@ A retro terminal-themed personal portfolio homepage for Jamie Joyce, with an adm
 - Updated links to Jamie's GitHub and LinkedIn.
 - Removed pronouns from the public profile and customize form.
 - Removed unrelated TSOYP/template wording from the public-facing defaults.
-- Cleaned projects down to **Lúgic** and **CineClash**.
+- Cleaned projects down to **Lúgic**, **CineClash**, and **Scraggle**.
 - Updated education/certifications to **BSc in Computing** and **ITIL Foundation — pending certification**.
+- Added **Scraggle** as a portfolio project.
 - Added an editable **currently** block for small human details like building, watching, playing, or thinking about.
 
 ## Run locally

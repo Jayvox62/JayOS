@@ -163,13 +163,14 @@ const DEFAULT_SETTINGS = {
   },
   currently: [
     { label: "building", value: "Lúgic" },
-    { label: "working on", value: "CineClash systems" },
+    { label: "working on", value: "Scraggle and CineClash systems" },
     { label: "thinking about", value: "cleaner interfaces and messy data" },
     { label: "based in", value: "Dublin" },
   ],
   projects: [
     { name: "Lúgic", desc: "Browser-based tooling focused on formatting, parsing, diagnostics, and workflow usability. Designed around local-first processing and simplifying messy operational data.", url: "#", tag: "tool" },
     { name: "CineClash", desc: "A film-linking game inspired by actor, director, and cinematic relationship chains. Focused on fast interaction, replayability, and movie knowledge discovery.", url: "#", tag: "game" },
+    { name: "Scraggle", desc: "A daily shared-rack word-grid puzzle where every player gets the same letters and builds one connected grid using every tile. Focused on pattern recognition, clean interaction, and social daily play.", url: "#", tag: "game" },
   ],
   links: [
     { label: "github", url: "https://github.com/Jayvox62" },
